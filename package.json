@@ -1,0 +1,32 @@
+{
+  "name": "node-js-sample",
+  "version": "0.0.0",
+  "description": "A sample Node.js",
+  "main": "excercises.js",
+  "scripts": {
+    "start": "node exercises.js",
+    "test": "jest --watchAll"
+  },
+  "engines": {
+    "node": "8.9.4"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "jest": {
+    "transform": {
+      "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest"
+    }
+  },
+  "author": "Me",
+  "contributors": [
+    "Me"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "babel-jest": "^22.4.4",
+    "jest": "^22.4.4"
+  }
+}
