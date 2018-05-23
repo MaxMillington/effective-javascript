@@ -21,7 +21,12 @@ const {
   thru,
   fromTo,
   element,
-  elementMod
+  elementMod,
+  collect,
+  filter,
+  concat,
+  gensymf,
+  fibonaccif
 } = exercises
 
 describe('fun with functions', () => {
@@ -165,5 +170,56 @@ describe('fun with functions', () => {
     expect(ele()).toEqual('c')
     expect(ele()).toEqual('d')
     expect(ele()).toEqual(undefined)
+  })
+
+  test('collect', () => {
+    let array = []
+    let col = collect(fromTo(0, 2), array)
+    expect(col()).toEqual(0)
+    expect(col()).toEqual(1)
+    expect(col()).toEqual(undefined)
+    expect(array).toEqual([0, 1])
+  })
+
+  test('filter', () => {
+    const divisibleByThree = (value) => {
+      return (value % 3) === 0
+    }
+    let fil = filter(
+      fromTo(0, 5),
+      divisibleByThree
+    )
+    expect(fil()).toEqual(0)
+    expect(fil()).toEqual(3)
+    expect(fil()).toEqual(undefined)
+  })
+
+  test('concat', () => {
+    let con = concat(fromTo(0, 3), fromTo(0, 2))
+    expect(con()).toEqual(0)
+    expect(con()).toEqual(1)
+    expect(con()).toEqual(2)
+    expect(con()).toEqual(0)
+    expect(con()).toEqual(1)
+    expect(con()).toEqual(undefined)
+  })
+
+  test('gensymf', () => {
+    let geng = gensymf('G')
+    let genh = gensymf('H')
+    expect(geng()).toEqual('G1')
+    expect(genh()).toEqual('H1')
+    expect(geng()).toEqual('G2')
+    expect(genh()).toEqual('H2')
+  })
+
+  test('fibonaccif', () => {
+    let fib = fibonaccif(0, 1)
+    expect(fib()).toEqual(0)
+    expect(fib()).toEqual(1)
+    expect(fib()).toEqual(1)
+    expect(fib()).toEqual(2)
+    expect(fib()).toEqual(3)
+    expect(fib()).toEqual(5)
   })
 })

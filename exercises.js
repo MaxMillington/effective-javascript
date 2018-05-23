@@ -1,115 +1,126 @@
-module.exports = {
-  identity: (x) => {
+
+const identity = (x) => {
+  return x
+}
+
+const identityf = (x) => {
+  return () => {
     return x
-  },
+  }
+}
 
-  identityf: (x) => {
-    return () => {
-      return x
-    }
-  },
+const add = (x, y) => {
+  return x + y
+}
 
-  add: (x, y) => {
-    return x + y
-  },
+const addf = (x) => {
+  return (y) => {
+    return y + x
+  }
+}
 
-  addf: (x) => {
-    return (y) => {
-      return y + x
-    }
-  },
+const sub = (x, y) => {
+  return x - y
+}
 
-  sub: (x, y) => {
-    return x - y
-  },
+const mul = (x, y) => {
+  return x * y
+}
 
-  mul: (x, y) => {
-    return x * y
-  },
+const curry = (binary, x) => {
+  return (y) => {
+    return binary(x, y)
+  }
+}
 
-  curry: (binary, x) => {
+const curryr = (binary, y) => {
+  return (x) => {
+    return binary(x, y)
+  }
+}
+
+const liftf = (binary) => {
+  return (x) => {
     return (y) => {
       return binary(x, y)
     }
-  },
+  }
+}
 
-  curryr: (binary, y) => {
-    return (x) => {
-      return binary(x, y)
+const twice = (binary) => {
+  return (x) => {
+    return binary(x, x)
+  }
+}
+
+const reverse = (binary) => {
+  return (...args) => {
+    return binary(...args.reverse())
+  }
+}
+
+const composeu = (unary1, unary2) => {
+  return (x) => {
+    return unary2(unary1(x))
+  }
+}
+
+const composeb =(binary1, binary2) => {
+  return (x, y, z) => {
+    return binary2(binary1(x, y), z)
+  }
+}
+
+const limit = (binary, timesAllowed) => {
+  let callTimes = 0
+
+  return (y, z) => {
+    if (callTimes < timesAllowed) {
+      let value = binary(y, z)
+      callTimes += 1
+      return value
     }
-  },
+  }
+}
 
-  liftf: (binary) => {
-    return (x) => {
-      return (y) => {
-        return binary(x, y)
-      }
+const from = (startValue) => {
+  return () => {
+    let returnValue = startValue
+    startValue += 1
+    return returnValue
+  }
+}
+
+const to = (generator, endValue) => {
+  return () => {
+    let returnValue = generator()
+    if (returnValue < endValue) {
+      return returnValue
     }
-  },
+  }
+}
 
-  twice: (binary) => {
-    return (x) => {
-      return binary(x, x)
+const thru = (generator, endValue) => {
+  return () => {
+    let returnValue = generator()
+    if (returnValue <= endValue) {
+      return returnValue
     }
-  },
+  }
+}
 
-  reverse: (binary) => {
-    return (...args) => {
-      return binary(...args.reverse())
-    }
-  },
-
-  composeu: (unary1, unary2) => {
-    return (x) => {
-      return unary2(unary1(x))
-    }
-  },
-
-  composeb: (binary1, binary2) => {
-    return (x, y, z) => {
-      return binary2(binary1(x, y), z)
-    }
-  },
-
-  limit: (binary, timesAllowed) => {
-    let callTimes = 0
-
-    return (y, z) => {
-      if (callTimes < timesAllowed) {
-        let value = binary(y, z)
-        callTimes += 1
-        return value
-      }
-    }
-  },
-
-  from: (startValue) => {
-    return () => {
-      let returnValue = startValue
+const fromTo = (startValue, endValue) => {
+  return () => {
+    let returnValue = startValue
+    if (returnValue < endValue) {
       startValue += 1
       return returnValue
     }
-  },
+  }
+}
 
-  to: (generator, endValue) => {
-    return () => {
-      let returnValue = generator()
-      if (returnValue < endValue) {
-        return returnValue
-      }
-    }
-  },
-
-  thru: (generator, endValue) => {
-    return () => {
-      let returnValue = generator()
-      if (returnValue <= endValue) {
-        return returnValue
-      }
-    }
-  },
-
-  fromTo: (startValue, endValue) => {
+const element = (array, generator) => {
+  const fromTo = (startValue, endValue) => {
     return () => {
       let returnValue = startValue
       if (returnValue < endValue) {
@@ -117,33 +128,94 @@ module.exports = {
         return returnValue
       }
     }
-  },
-
-  element: (array, generator) => {
-    const fromTo = (startValue, endValue) => {
-      return () => {
-        let returnValue = startValue
-        if (returnValue < endValue) {
-          startValue += 1
-          return returnValue
-        }
-      }
-    }
-    if (generator === undefined) {
-      generator = fromTo(0, array.length)
-    }
-    return () => {
-      let index = generator()
-      return array[index]
-    }
-  },
-
-  elementMod: (array) => {
-    let index = 0
-    return () => {
-      let returnValue = array[index]
-      index += 1
-      return returnValue
-    }
   }
+  if (generator === undefined) {
+    generator = fromTo(0, array.length)
+  }
+  return () => {
+    let index = generator()
+    return array[index]
+  }
+}
+
+const elementMod = (array) => {
+  let index = 0
+  return () => {
+    let returnValue = array[index]
+    index += 1
+    return returnValue
+  }
+}
+
+const collect = (generator, array) => {
+  return () => {
+    let returnValue = generator()
+    if (returnValue !== undefined) {
+      array.push(returnValue)
+    }
+    return returnValue
+  }
+}
+
+const filter = (generator, predicate) => {
+  return function filterGenerator() {
+    let value = generator()
+    if (value === undefined || predicate(value)) {
+      return value
+    }
+    return filterGenerator()
+  }
+}
+
+const concat = (generator1, generator2) => {
+  return () => {
+    let res = generator1()
+    if(res ===  undefined) { res = generator2() }
+    return res
+  }
+}
+
+const gensymf = (letter) => {
+  let count = 0
+  return () => {
+    count += 1
+    return letter + `${count}`
+  }
+}
+
+const fibonaccif = (x, y) => {
+  return () => {
+    let next = x
+    x = y
+    y += next
+    return next
+  }
+}
+
+module.exports = {
+  identity,
+  identityf,
+  add,
+  addf,
+  sub,
+  mul,
+  curry,
+  curryr,
+  liftf,
+  twice,
+  reverse,
+  composeu,
+  composeb,
+  limit,
+  from,
+  to,
+  thru,
+  fromTo,
+  element,
+  elementMod,
+  collect,
+  filter,
+  concat,
+  gensymf,
+  fibonaccif
 }
