@@ -1,5 +1,5 @@
 module.exports = {
-  identity:  (x) => {
+  identity: (x) => {
     return x
   },
 
@@ -25,5 +25,25 @@ module.exports = {
 
   mul: (x, y) => {
     return x * y
+  },
+
+  curry: (func, x) => {
+    return (y) => {
+      return func(x, y)
+    }
+  },
+
+  curryr: (func, y) => {
+    return (x) => {
+      return func(x, y)
+    }
+  },
+
+  liftf: (func) => {
+    return (x) => {
+      return (y) => {
+        return func(x, y)
+      }
+    }
   }
 }
