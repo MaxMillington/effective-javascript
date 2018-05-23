@@ -26,7 +26,10 @@ const {
   filter,
   concat,
   gensymf,
-  fibonaccif
+  fibonaccif,
+  counter,
+  revocable,
+  addg
 } = exercises
 
 describe('fun with functions', () => {
@@ -221,5 +224,32 @@ describe('fun with functions', () => {
     expect(fib()).toEqual(2)
     expect(fib()).toEqual(3)
     expect(fib()).toEqual(5)
+  })
+
+  test('counter', () => {
+    let object = counter(10)
+    let up = object.up
+    let down = object.down
+    expect(up()).toEqual(11)
+    expect(down()).toEqual(10)
+    expect(down()).toEqual(9)
+    expect(up()).toEqual(10)
+  })
+
+  test('revocalbe', () => {
+    let rev = revocable(add)
+    let add_rev = rev.invoke
+    expect(add_rev(3, 4)).toEqual(7)
+    rev.revoke()
+    expect(add_rev(5, 7)).toEqual(undefined)
+  })
+
+  test('addg', () => {
+    expect(addg()).toEqual(undefined)
+    expect(addg(2)()).toEqual(2)
+    expect(addg(2)(7)()).toEqual(9)
+    expect(addg(3)(0)(4)()).toEqual(7)
+    expect(addg(1)(2)(4)(8)()).toEqual(15)
+    // function taht calls itself
   })
 })

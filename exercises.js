@@ -192,6 +192,34 @@ const fibonaccif = (x, y) => {
   }
 }
 
+const counter = (number) => {
+  return {
+    up: () => {
+      number += 1
+      return number
+    },
+    down: () => {
+      number -= 1
+      return number
+    }
+  }
+}
+
+const revocable = (binary) => {
+  return {
+    invoke: (...args) => {
+      if (binary !== undefined) {
+        return binary(...args)
+      }
+    },
+    revoke: () => { binary = undefined }
+  }
+}
+
+const addg = () => {
+
+}
+
 module.exports = {
   identity,
   identityf,
@@ -217,5 +245,8 @@ module.exports = {
   filter,
   concat,
   gensymf,
-  fibonaccif
+  fibonaccif,
+  counter,
+  revocable,
+  addg
 }
