@@ -1,6 +1,5 @@
 /* global jest, describe, expect, test */
 
-
 const exercises = require('./exercises')
 const {
   identity,
@@ -11,7 +10,18 @@ const {
   mul,
   curry,
   curryr,
-  liftf
+  liftf,
+  twice,
+  reverse,
+  composeu,
+  composeb,
+  limit,
+  from,
+  to,
+  thru,
+  fromTo,
+  element,
+  elementMod
 } = exercises
 
 describe('fun with functions', () => {
@@ -75,5 +85,85 @@ describe('fun with functions', () => {
     inc = curryr(add, 1)
     expect(inc(5)).toEqual(6)
     expect(inc(inc(5))).toEqual(7)
+  })
+
+  test('twice', () => {
+    expect(add(11, 11)).toEqual(22)
+    const double = twice(add)
+    expect(double(11)).toEqual(22)
+    const square = twice(mul)
+    expect(square(11)).toEqual(121)
+  })
+
+  test('reverse', () => {
+    const bus = reverse(sub)
+    expect(bus(3, 2)).toEqual(-1)
+  })
+
+  test('composeu', () => {
+    const double = twice(add)
+    const square = twice(mul)
+    expect(composeu(double, square)(5)).toEqual(100)
+  })
+
+  test('composeb', () => {
+    expect(composeb(add, mul)(2, 3, 7)).toEqual(35)
+  })
+
+  test('limit', () => {
+    let add_ltd = limit(add, 1)
+    expect(add_ltd(3, 4)).toEqual(7)
+    expect(add_ltd(3, 4)).toEqual(undefined)
+  })
+
+  test('from', () => {
+    let index = from(0)
+    expect(index()).toEqual(0)
+    expect(index()).toEqual(1)
+    expect(index()).toEqual(2)
+  })
+
+  test('to', () => {
+    let index = to(from(2), 4)
+    expect(index()).toEqual(2)
+    expect(index()).toEqual(3)
+    expect(index()).toEqual(undefined)
+  })
+
+  test('thru', () => {
+    let index = thru(from(2), 4)
+    expect(index()).toEqual(2)
+    expect(index()).toEqual(3)
+    expect(index()).toEqual(4)
+    expect(index()).toEqual(undefined)
+  })
+
+  test('fromTo', () => {
+    let index = fromTo(0, 3)
+    expect(index()).toEqual(0)
+    expect(index()).toEqual(1)
+    expect(index()).toEqual(2)
+    expect(index()).toEqual(undefined)
+  })
+
+  test('element', () => {
+    let ele = element([
+      'a', 'b', 'c', 'd'
+    ], fromTo(1, 3))
+
+    expect(ele()).toEqual('b')
+    expect(ele()).toEqual('c')
+    expect(ele()).toEqual(undefined)
+  })
+
+  test('elementMod', () => {
+    let ele = element([
+      'a', 'b', 'c', 'd'
+    ])
+    expect(ele()).toEqual('a')
+    expect(ele()).toEqual('b')
+    expect(ele()).toEqual('c')
+    expect(ele()).toEqual('d')
+    expect(ele()).toEqual(undefined)
   })
 })
