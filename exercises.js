@@ -216,8 +216,49 @@ const revocable = (binary) => {
   }
 }
 
-const addg = () => {
+const addg = (first) => {
+  if (first !== undefined) {
+    return function more(next) {
+      if (next === undefined) {
+        return first
+      }
+      first += next
+      return more
+    }
+  }
+}
 
+const liftg = (binary) => {
+  return function g(first) {
+    if (first === undefined) {
+      return first
+    }
+    return function more(next) {
+      if (next === undefined) {
+        return first
+      }
+      first = binary(first, next)
+      return more
+    }
+  }
+}
+
+const precisionRound = (number, precision) => {
+  let factor = Math.pow(10, precision);
+  return Math.round(number * factor) / factor;
+}
+
+const join = (func, gen1, gen2) => {
+  return () => {
+    return precisionRound(func(gen1(), gen2()), 3)
+  }
+}
+
+const continuize = (unary) => {
+  return (callback, arg) => {
+    // return callback(unary(arg))
+    return unary(arg)
+  }
 }
 
 module.exports = {
@@ -248,5 +289,8 @@ module.exports = {
   fibonaccif,
   counter,
   revocable,
-  addg
+  addg,
+  liftg,
+  join,
+  continuize
 }

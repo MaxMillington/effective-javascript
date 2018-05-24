@@ -29,7 +29,10 @@ const {
   fibonaccif,
   counter,
   revocable,
-  addg
+  addg,
+  liftg,
+  join,
+  continuize
 } = exercises
 
 describe('fun with functions', () => {
@@ -250,6 +253,32 @@ describe('fun with functions', () => {
     expect(addg(2)(7)()).toEqual(9)
     expect(addg(3)(0)(4)()).toEqual(7)
     expect(addg(1)(2)(4)(8)()).toEqual(15)
-    // function taht calls itself
+  })
+
+  test.skip('liftg', () => {
+    expect(liftg(mul)()).toEqual(undefined)
+    expect(liftg(mul)(3)()).toEqual(3)
+    expect(liftg(mul)(3)(0)(4)()).toEqual(0)
+    expect(liftg(mul)(1)(2)(4)(8)).toEqual(64)
+  })
+
+  test('join', () => {
+    let gr = join(
+      function div(a, b) {
+        return a / b
+      },
+      fibonaccif(3, 5),
+      fibonaccif(2, 3)
+    )
+    expect(gr()).toEqual(1.5)
+    expect(gr()).toEqual(1.667)
+    expect(gr()).toEqual(1.6)
+    expect(gr()).toEqual(1.625)
+    expect(gr()).toEqual(1.615)
+  })
+
+  test('continuize', () => {
+    let sqrtc = continuize(Math.sqrt)
+    expect(sqrtc(console.log, 81)).toEqual(9)
   })
 })
